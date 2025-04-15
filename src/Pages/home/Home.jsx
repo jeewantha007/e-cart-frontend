@@ -5,6 +5,7 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -17,12 +18,26 @@ export default function Home() {
             to fashion, find everything you need at Shop Smart Academy Store
           </p>
           <Button variant="contained" href="#contained-buttons"  sx={{ mr: 2 }}> 
-            Shop Now
+          <Link
+              to="/products"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+                Shop Now
+            </Link>
+         
           </Button>
 
           <Button className="btn" variant="outlined" size="medium">
-            Browse categories
+          <Link
+              to="/categories"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+             Browse categories
+            </Link>
+            
           </Button>
+
+         
 
         </div>
 

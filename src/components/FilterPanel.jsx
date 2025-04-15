@@ -13,9 +13,8 @@ import {
   Slider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { styled } from '@mui/system';
 
-const FilterPanel = () => {
+const FilterPanel = ({ onCategoryChange, onPriceRangeChange, onReset }) => {
   const [categories, setCategories] = useState({
     electronics: false,
     clothing: false,
@@ -24,28 +23,35 @@ const FilterPanel = () => {
     homeKitchen: false,
   });
 
-  const [priceRange, setPriceRange] = useState([100, 1000]);
+  const [priceRange, setPriceRange] = useState([1000, 100000]);
 
   const handleCategoryChange = (event) => {
-    setCategories({
+    const updatedCategories = {
       ...categories,
       [event.target.name]: event.target.checked,
-    });
+    };
+    setCategories(updatedCategories);
+    onCategoryChange(updatedCategories);
   };
 
   const handleReset = () => {
-    setCategories({
+    const resetCategories = {
       electronics: false,
       clothing: false,
       footwear: false,
       accessories: false,
       homeKitchen: false,
-    });
-    setPriceRange([100, 1000]);
+    };
+    setCategories(resetCategories);
+    setPriceRange([1000, 100000]);
+    onCategoryChange(resetCategories);
+    onPriceRangeChange([1000, 100000]);
+    onReset();
   };
 
   const handleSliderChange = (event, newValue) => {
     setPriceRange(newValue);
+    onPriceRangeChange(newValue);
   };
 
   return (
@@ -65,15 +71,15 @@ const FilterPanel = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" sx={{ mb: 1 }}>
-            ${priceRange[0]} - ${priceRange[1]}
+            LKR{priceRange[0]} - LKR{priceRange[1]}
           </Typography>
           <Slider
             value={priceRange}
             onChange={handleSliderChange}
             valueLabelDisplay="auto"
-            min={0}
-            max={2000}
-            step={50}
+            min={1000}
+            max={100000}
+            step={500}
             sx={{ color: '#1976d2' }}
           />
         </AccordionDetails>
@@ -113,16 +119,9 @@ const FilterPanel = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Buttons */}
+      {/* Reset Button */}
       <Button
         variant="contained"
-        fullWidth
-        sx={{ mb: 1, fontWeight: 600, textTransform: 'none' }}
-      >
-        Apply Filters
-      </Button>
-      <Button
-        variant="outlined"
         fullWidth
         onClick={handleReset}
         sx={{ fontWeight: 500, textTransform: 'none' }}

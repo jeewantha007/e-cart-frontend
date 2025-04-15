@@ -1,4 +1,5 @@
 import React from 'react';
+import "./components.css";
 import {
   Card,
   CardContent,
@@ -10,12 +11,24 @@ import {
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 
-const ProductCard = () => {
+const ProductCard = ({
+  image,
+  category,
+  title,
+  description,
+  price,
+  onAddToCart,
+}) => {
+
+    const formattedPrice = price && !isNaN(price)
+    ? `LKR ${price.toLocaleString()}`
+    : 'LKR 0'; ;
+
   return (
     <Card
       sx={{
         width: 260,
-        height: 340, // 👈 Fixed height
+        height: 340, 
         borderRadius: 3,
         position: 'relative',
         boxShadow: 2,
@@ -35,9 +48,13 @@ const ProductCard = () => {
           flexShrink: 0,
         }}
       >
-        <Typography variant="body2" color="text.secondary">
-          Product Image
-        </Typography>
+        {image ? (
+          <img className='proImages' src={image} alt={title} style={{ maxHeight: '100%', width: '100%' }} />
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            Product Image
+          </Typography>
+        )}
         <IconButton
           sx={{ position: 'absolute', top: 6, right: 6 }}
           aria-label="add to favorites"
@@ -54,26 +71,27 @@ const ProductCard = () => {
             color="text.secondary"
             sx={{ textTransform: 'uppercase', fontSize: '0.65rem' }}
           >
-            Electronics
+            {category}
           </Typography>
 
           <Typography variant="subtitle1" fontWeight={600} sx={{ fontSize: '1rem', mt: 0.5 }}>
-            Smartphone X
+            {title}
           </Typography>
 
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, fontSize: '0.75rem' }}>
-            Latest smartphone with cutting edge technology and features....
+            {description}
           </Typography>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
           <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: '1rem' }}>
-            $999.99
+          {formattedPrice}
           </Typography>
           <Button
             variant="outlined"
             size="small"
             startIcon={<ShoppingCartCheckoutIcon fontSize="small" />}
+            onClick={onAddToCart}
           >
             Add to Cart
           </Button>
