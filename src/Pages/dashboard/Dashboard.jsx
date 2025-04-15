@@ -1,8 +1,19 @@
 import React from 'react';
 import './dashboard.css';
 import Home from '../home/Home';
-
+import Products from '../products/Products';
+import Badge, { badgeClasses } from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined'
+import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 export default function Dashboard() {
+
+  const CartBadge = styled(Badge)`
+  & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+  }
+`;
   return (
     <div className="dashboard">
     <nav className="navbar">
@@ -14,6 +25,11 @@ export default function Dashboard() {
     <li><a href="#">Home</a></li>
     <li><a href="#">Products</a></li>
     <li><a href="#">Categories</a></li>
+
+    <IconButton>
+  <ShoppingCartIcon fontSize="small" />
+  <CartBadge badgeContent={5} color="primary" overlap="circular" />
+</IconButton>
     <li><a href="#">Logout</a></li>
   </ul>
 </nav>
@@ -21,7 +37,8 @@ export default function Dashboard() {
 
       <main className="main-content">
 
-        <Home/>
+        {/* <Home/> */}
+        <Products/>
      
       </main>
 

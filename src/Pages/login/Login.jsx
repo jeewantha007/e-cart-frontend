@@ -24,8 +24,11 @@ export default function Login() {
   };
 
   return (
+    <div className="auth-wrapper">
     <div className="auth-container">
-      <h2>Login</h2>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt1WqAhsjbTEz_IxcDDdYmqQOeC1dd6sXd7nr52vBY0OmcAhavLE9olYW5SV8p2WDjVfU&usqp=CAU" alt="" />
+      <h2>Welcome Back</h2>
+      <p>Log in to your account to continue shopping</p>
       <form className="auth-form" onSubmit={handleSubmit}>
         <input
           type="email"
@@ -34,7 +37,7 @@ export default function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
+  
         <input
           type="password"
           placeholder="Password"
@@ -42,10 +45,12 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
+  
         <button type="submit">Login</button>
-        <p>Don't have an account? <a href="/register">Register</a></p>
+        <p>Already have an account? <a href="/register">Create one now</a></p>
       </form>
     </div>
+  </div>
+  
   );
 }

@@ -45,8 +45,14 @@ export default function Register() {
   };
 
   return (
+    <div className="auth-wrapper">
     <div className="auth-container">
-      <h2>Register</h2>
+      <img 
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt1WqAhsjbTEz_IxcDDdYmqQOeC1dd6sXd7nr52vBY0OmcAhavLE9olYW5SV8p2WDjVfU&usqp=CAU" 
+        alt="Shop Smart Logo" 
+      />
+      <h2>Create an Account</h2>
+      <p>Join E-Cart to start shopping</p>
       <form className="auth-form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -89,8 +95,10 @@ export default function Register() {
           onChange={handleChange}
         />
         <button type="submit">Register</button>
-        <p>Already have an account? <a href="#">Login</a></p>
+        <p>Already have an account? <a href="/login">Login</a></p>
       </form>
     </div>
+  </div>
+  
   );
 }
