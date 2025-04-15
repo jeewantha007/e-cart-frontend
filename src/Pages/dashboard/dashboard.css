@@ -8,13 +8,15 @@ body{
   }
   
   .navbar {
-    background-color: #1e1e2f;
-    color: white;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
     padding: 15px 30px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* 👈 Pushes logo left & nav-links right */
     align-items: center;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
+  
   
   .logo {
     margin: 0;
@@ -23,11 +25,11 @@ body{
   .nav-links {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 50px;
   }
   
   .nav-links a {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
   }
   
@@ -48,5 +50,20 @@ body{
     font-size: 0.9rem;
     color: #555;
     border-top: 1px solid #ddd;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .logoImg {
+    width: 60px;
+    height: auto;
+  }
+  
+  .logoText {
+    font-size: 1.5rem;
+    font-weight: bold;
   }
   
