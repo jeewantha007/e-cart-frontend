@@ -1,0 +1,35 @@
+.ap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+body {
+  margin: 0;
+  background-color: #fcfcfc;
+}
+
+.ap-top {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ap-rest {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: auto;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.ap-topic {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

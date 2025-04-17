@@ -1,19 +1,21 @@
-import React from "react";
-import "./dashboard.css";
-import Home from "../home/Home";
-import Products from "../products/Products";
-import Categories from "../Categories/Categories";
+import React from 'react';
+import './dashboard.css';
+import { Link, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+import Badge, { badgeClasses } from '@mui/material/Badge';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-import Badge, { badgeClasses } from "@mui/material/Badge";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { styled } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
-import { Link, Routes, Route } from "react-router-dom";
-import Cart from "../cart/Cart";
-import Login from "../login/Login";
-import Register from "../register/Register";
+import Home from '../home/Home';
+import Products from '../products/Products';
+import Categories from '../Categories/Categories';
+import Cart from '../cart/Cart';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   const CartBadge = styled(Badge)`
     & .${badgeClasses.badge} {
       top: -12px;
@@ -21,55 +23,65 @@ export default function Dashboard() {
     }
   `;
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('role');
+  
+    navigate('/', { replace: true });
+    window.location.reload(); // Force re-evaluate App routing based on localStorage
+  };
+  
+  
+  
+
   return (
     <div className="dashboard">
       <nav className="navbar">
-        <div className="logo">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt1WqAhsjbTEz_IxcDDdYmqQOeC1dd6sXd7nr52vBY0OmcAhavLE9olYW5SV8p2WDjVfU&usqp=CAU"
-            alt="Logo"
-            className="logoImg"
-          />
-          <span className="logoText">E-Cart</span>
-        </div>
+      <Link style={{ textDecoration: 'none', color: 'inherit' }}to="home">
+  <div className="logo">
+    <img
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt1WqAhsjbTEz_IxcDDdYmqQOeC1dd6sXd7nr52vBY0OmcAhavLE9olYW5SV8p2WDjVfU&usqp=CAU"
+      alt="Logo"
+      className="logoImg"
+    />
+    <span className="logoText">E-Cart</span>
+  </div>
+</Link>
+
         <ul className="nav-links">
+          <li><Link to="/dashboard">Home</Link></li>
+          <li><Link to="/dashboard/products">Products</Link></li>
+          <li><Link to="/dashboard/categories">Categories</Link></li>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/dashboard/cart">
+              <IconButton size="large">
+                <ShoppingCartIcon />
+                <CartBadge badgeContent={5} color="primary" overlap="circular" />
+              </IconButton>
+            </Link>
           </li>
           <li>
-            <Link to="/products">Products</Link>
-          </li>
-          <li>
-            <Link to="/categories">Categories</Link>
-          </li>
-
-          <Link to={'/cart'}>
-            <IconButton>
-              <ShoppingCartIcon fontSize="small" />
-              <CartBadge badgeContent={5} color="primary" overlap="circular" />
-            </IconButton>
-          </Link>
-
-          <li>
-          <Link to="/login">Login</Link>
+            <Button
+              color="inherit"
+              startIcon={<LogoutIcon />}
+              onClick={handleLogout}
+              sx={{ textTransform: 'none' }}
+            >
+              Logout
+            </Button>
           </li>
         </ul>
       </nav>
 
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route index element={<Home />} />
+          <Route path="products" element={<Products />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
-
-      <footer className="footer">
-        <p>&copy; {new Date().getFullYear()} E-Cart. All rights reserved.</p>
-      </footer>
     </div>
   );
 }

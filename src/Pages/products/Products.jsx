@@ -1,25 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./products.css";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import ProductCard from "../../components/ProductCard";
 import FilterPanel from "../../components/FilterPanel";
-
-// Sample product data
-const allProducts = [
-  { id: 1, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9eR-1ToDErfVoakImpmLaUJlaoJYSwJHAQA&s', category: 'electronics', title: 'Smartphone X', description: 'Latest smartphone...', price: 1999 },
-  { id: 2, image: 'https://s.yimg.com/uu/api/res/1.2/8qEpdS41t1J25mZqg2FdWg--~B/Zmk9c3RyaW07aD03MjA7dz0xMjgwO2FwcGlkPXl0YWNoeW9u/https://media-mbst-pub-ue1.s3.amazonaws.com/creatr-uploaded-images/2024-03/fb9eb290-dfcf-11ee-9faf-f58030c650b1', category: 'clothing', title: 'T-shirt', description: 'Stylish t-shirt...', price: 5000 },
-  { id: 3, image: 'https://cdn.thewirecutter.com/wp-content/media/2024/11/runningshoes-2048px-09517.jpg?auto=webp&quality=75&width=1024', category: 'footwear', title: 'Running Shoes', description: 'Comfortable running shoes...', price: 5900 },
-  { id: 4, image: 'https://cdn.thewirecutter.com/wp-content/media/2023/07/bluetoothheadphones-2048px-0876.jpg', category: 'accessories', title: 'Headphones', description: 'Wireless headphones...', price: 1990 },
-  { id: 5, image: 'https://media.amway.eu/sys-master/images/ha3/h31/12164080107550/312396_1_IMAGE_product-image_800_800', category: 'homeKitchen', title: 'Blender', description: 'Powerful kitchen blender...', price: 20000 },
-];
+import axios from 'axios';
 
 export default function Products() {
-  const [filteredProducts, setFilteredProducts] = useState(allProducts);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState({});
   const [priceRange, setPriceRange] = useState([1000, 100000]);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/v1/products/getAll');
+        setFilteredProducts(response.data);
+        
+        // Initialize categories based on unique product categories
+        const uniqueCategories = {};
+        response.data.forEach(product => {
+          if (product.category) {
+            uniqueCategories[product.category] = false;
+          }
+        });
+        setCategories(uniqueCategories);
+        
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    
+    fetchProducts();
+  }, []);
+
+  console.log(filteredProducts);
 
   const handleCategoryChange = (updatedCategories) => {
     setCategories(updatedCategories);
@@ -40,12 +57,17 @@ export default function Products() {
   };
 
   const filterProducts = () => {
-    return allProducts.filter((product) => {
+    return filteredProducts.filter((product) => {
+      // Check if no categories are selected (all false values)
       const noCategorySelected = Object.values(categories).every((v) => v === false);
-      const isCategorySelected = noCategorySelected || categories[product.category];
+      
+      // Only check category match if at least one category is selected
+      const isCategorySelected = noCategorySelected || 
+        (product.category && categories[product.category] === true);
+      
       const isPriceInRange = product.price >= priceRange[0] && product.price <= priceRange[1];
-      const isTitleMatched = product.title.toLowerCase().includes(searchTerm);
-
+      const isTitleMatched = product.name && product.category.toLowerCase().includes(searchTerm);
+      
       return isCategorySelected && isPriceInRange && isTitleMatched;
     });
   };
@@ -91,9 +113,9 @@ export default function Products() {
             productsToDisplay.map((product) => (
               <ProductCard
                 key={product.id}
-                image={product.image}
+                image={product.image || ''}
                 category={product.category}
-                title={product.title}
+                title={product.name}  // Use product.name for title
                 description={product.description}
                 price={product.price}
               />

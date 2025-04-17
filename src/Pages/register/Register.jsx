@@ -95,7 +95,7 @@ export default function Register() {
           onChange={handleChange}
         />
         <button type="submit">Register</button>
-        <p>Already have an account? <a href="/login">Login</a></p>
+        <p>Already have an account? <a href="/">Login</a></p>
       </form>
     </div>
   </div>

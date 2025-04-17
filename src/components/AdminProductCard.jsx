@@ -1,34 +1,28 @@
 import React from 'react';
-import "./components.css";
-import {
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  Button,
-  Box,
-} from '@mui/material';
+import { Card, CardContent, Typography, IconButton, Button, Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const ProductCard = ({
+const AdminProductCard = ({
   image,
   category,
   title,
   description,
   price,
-  onAddToCart,
+  onEdit,
+  onDelete,
 }) => {
 
-    const formattedPrice = price && !isNaN(price)
+  const formattedPrice = price && !isNaN(price)
     ? `LKR ${price.toLocaleString()}`
-    : 'LKR 0'; ;
+    : 'LKR 0';
 
   return (
     <Card
       sx={{
         width: 260,
-        height: 340, 
+        height: 380,
         borderRadius: 3,
         position: 'relative',
         boxShadow: 2,
@@ -49,18 +43,13 @@ const ProductCard = ({
         }}
       >
         {image ? (
-          <img className='proImages' src={image} alt={title} style={{ maxHeight: '100%', width: '100%' }} />
+          <img className="proImages" src={image} alt={title} style={{ maxHeight: '100%', width: '100%' }} />
         ) : (
           <Typography variant="body2" color="text.secondary">
             Product Image
           </Typography>
         )}
-        <IconButton
-          sx={{ position: 'absolute', top: 6, right: 6 }}
-          aria-label="add to favorites"
-        >
-          <FavoriteBorderIcon fontSize="small" />
-        </IconButton>
+        
       </Box>
 
       {/* Card Content */}
@@ -84,21 +73,21 @@ const ProductCard = ({
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-          <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: '0.8rem' }}>
-          {formattedPrice}
+          <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: '1rem' }}>
+            {formattedPrice}
           </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<ShoppingCartCheckoutIcon fontSize="small" />}
-            onClick={onAddToCart}
-          >
-            Add to Cart
-          </Button>
+          <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+            <IconButton onClick={onEdit} color="primary">
+              <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton onClick={onDelete} color="error">
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Box>
         </Box>
       </CardContent>
     </Card>
   );
 };
 
-export default ProductCard;
+export default AdminProductCard;
