@@ -30,6 +30,7 @@ export default function Login() {
 
       localStorage.setItem('authToken', token);
       localStorage.setItem('role', user.role);
+      localStorage.setItem('userId', user.id); 
 
       // Redirect based on role
    // In Login.jsx, after localStorage.setItem(...)

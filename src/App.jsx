@@ -12,7 +12,6 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('authToken'));
   const [role, setRole] = useState(localStorage.getItem('role'));
 
-  // Whenever location changes (user navigates), update auth
   useEffect(() => {
     setIsAuthenticated(!!localStorage.getItem('authToken'));
     setRole(localStorage.getItem('role'));
@@ -24,11 +23,36 @@ const App = () => {
     return element;
   };
 
+  const RedirectIfAuthenticated = ({ children }) => {
+    if (isAuthenticated) {
+      if (role === 'admin') {
+        return <Navigate to="/admin-dashboard" replace />;
+      } else if (role === 'user') {
+        return <Navigate to="/dashboard" replace />;
+      }
+    }
+    return children;
+  };
+
   return (
     <Routes>
-      {/* Public */}
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      {/* Public with redirect if already logged in */}
+      <Route
+        path="/"
+        element={
+          <RedirectIfAuthenticated>
+            <Login />
+          </RedirectIfAuthenticated>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <RedirectIfAuthenticated>
+            <Register />
+          </RedirectIfAuthenticated>
+        }
+      />
 
       {/* Protected */}
       <Route
@@ -40,7 +64,6 @@ const App = () => {
           />
         }
       />
-
       <Route
         path="/admin-dashboard/*"
         element={

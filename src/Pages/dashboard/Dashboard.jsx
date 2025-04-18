@@ -25,8 +25,7 @@ export default function Dashboard() {
   `;
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('role');
+    localStorage.clear();
     navigate('/', { replace: true });
     window.location.reload(); // Force re-evaluate App routing based on localStorage
   };

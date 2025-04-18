@@ -107,7 +107,7 @@ const NavItems = [
   { text: 'Products', icon: <ShoppingCartIcon />, path: '/admin-dashboard/admin-products' },
   { text: 'Orders', icon: <ListAltIcon />, path: '/admin-orders' },
   { text: 'Users', icon: <PeopleIcon />, path: '/admin-dashboard/admin-users' },
-  // { text: 'Reviews', icon: <RateReviewIcon />, path: '/admin-reviews' },
+  { text: 'Reviews', icon: <RateReviewIcon />, path: '/admin-reviews' },
   // { text: 'Settings', icon: <SettingsIcon />, path: '/admin-settings' },
 ];
 
@@ -124,8 +124,8 @@ export default function AdminDashboard() {
     setOpen(false);
   };
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('role');
+    localStorage.clear();
+    
   
     navigate('/', { replace: true });
     window.location.reload(); // Force re-evaluate App routing based on localStorage
