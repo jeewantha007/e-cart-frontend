@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './dashboard.css';
 import { Link, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
@@ -14,6 +14,7 @@ import Categories from '../Categories/Categories';
 import Cart from '../cart/Cart';
 
 export default function Dashboard() {
+  const [cartCount, setCartCount] = useState(0);
   const navigate = useNavigate();
 
   const CartBadge = styled(Badge)`
@@ -26,27 +27,44 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('role');
-  
     navigate('/', { replace: true });
     window.location.reload(); // Force re-evaluate App routing based on localStorage
   };
-  
-  
-  
+
+  // Function to update the cart count from localStorage
+  const updateCartCount = () => {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const newCartCount = cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
+    setCartCount(newCartCount);
+  };
+
+  // This will be triggered each time localStorage is updated directly in this session
+  useEffect(() => {
+    // Initial load to get cart count
+    updateCartCount();
+
+    // Listen for changes in cart items stored in localStorage
+    const interval = setInterval(() => {
+      updateCartCount();  // Re-check cart count every 500ms
+    }, 500);
+
+    // Clean up the interval when component unmounts
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="dashboard">
       <nav className="navbar">
-      <Link style={{ textDecoration: 'none', color: 'inherit' }}to="home">
-  <div className="logo">
-    <img
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt1WqAhsjbTEz_IxcDDdYmqQOeC1dd6sXd7nr52vBY0OmcAhavLE9olYW5SV8p2WDjVfU&usqp=CAU"
-      alt="Logo"
-      className="logoImg"
-    />
-    <span className="logoText">E-Cart</span>
-  </div>
-</Link>
+        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="home">
+          <div className="logo">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt1WqAhsjbTEz_IxcDDdYmqQOeC1dd6sXd7nr52vBY0OmcAhavLE9olYW5SV8p2WDjVfU&usqp=CAU"
+              alt="Logo"
+              className="logoImg"
+            />
+            <span className="logoText">E-Cart</span>
+          </div>
+        </Link>
 
         <ul className="nav-links">
           <li><Link to="/dashboard">Home</Link></li>
@@ -56,7 +74,7 @@ export default function Dashboard() {
             <Link to="/dashboard/cart">
               <IconButton size="large">
                 <ShoppingCartIcon />
-                <CartBadge badgeContent={5} color="primary" overlap="circular" />
+                <CartBadge badgeContent={cartCount} color="primary" overlap="circular" />
               </IconButton>
             </Link>
           </li>

@@ -1,12 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./cart.css";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import { useCart } from "../../components/CartProvider";
+import CartItem from "../../components/CartItem";
 
 export default function Cart() {
-  const { cartItems } = useCart();
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+  // Load cart from localStorage
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem("cartItems");
+    if (savedCart) {
+      return JSON.parse(savedCart).map(item => ({
+        ...item,
+        price: parseFloat(item.price) // 👈 ensure price is a number
+      }));
+    }
+    return [];
+  });
+  
+
+  // Update localStorage whenever cart changes
+  const updateLocalStorage = (updatedItems) => {
+    localStorage.setItem("cartItems", JSON.stringify(updatedItems));
+  };
+
+  const handleIncrement = (id) => {
+    const updatedItems = cartItems.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+    );
+    setCartItems(updatedItems);
+    updateLocalStorage(updatedItems);
+  };
+
+  const handleDecrement = (id) => {
+    const updatedItems = cartItems.map((item) =>
+      item.id === id && item.quantity > 1
+        ? { ...item, quantity: item.quantity - 1 }
+        : item
+    );
+    setCartItems(updatedItems);
+    updateLocalStorage(updatedItems);
+  };
+
+  const handleDelete = (id) => {
+    const updatedItems = cartItems.filter((item) => item.id !== id);
+    setCartItems(updatedItems);
+    updateLocalStorage(updatedItems);
+  };
+
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
+  const handleCheckout = () => {
+    alert("Proceeding to checkout...");
+    localStorage.removeItem("cartItems");
+    setCartItems([]);
+  };
 
   return (
     <div className="cart-wrapper">
@@ -25,20 +75,25 @@ export default function Cart() {
             <h2>Your cart is empty</h2>
             <p>Looks like you haven't added any products to your cart yet.</p>
             <Button variant="contained" sx={{ mt: 2 }}>
-              <Link to="/products" style={{ textDecoration: "none", color: "inherit" }}>Start Shopping</Link>
+              <Link
+                to="/products"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                Start Shopping
+              </Link>
             </Button>
           </div>
         ) : (
           <div className="cart-content">
-            {cartItems.map((item, idx) => (
-              <div key={idx} className="cart-item">
-                <img src={item.image} alt={item.title} className="cart-item-img" />
-                <div className="cart-item-details">
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                  <p>Rs. {item.price}</p>
-                </div>
-              </div>
+            {cartItems.map((item) => (
+              <CartItem
+              image={item.image}
+                key={item.id}
+                item={item}
+                onIncrement={handleIncrement}
+                onDecrement={handleDecrement}
+                onDelete={handleDelete}
+              />
             ))}
           </div>
         )}
@@ -48,7 +103,7 @@ export default function Cart() {
         <h2>Order Summary</h2>
         <div className="summary-row">
           <span>Subtotal ({cartItems.length} items)</span>
-          <span>Rs. {subtotal}</span>
+          <span>Rs. {subtotal.toFixed(2)}</span>
         </div>
         <div className="summary-row">
           <span>Shipping</span>
@@ -61,14 +116,14 @@ export default function Cart() {
         <hr />
         <div className="summary-row total">
           <span>Total</span>
-          <span>Rs. {subtotal}</span>
+          <span>Rs. {subtotal.toFixed(2)}</span>
         </div>
         <Button
           variant="contained"
           color="primary"
           sx={{ mt: 2 }}
-          disabled={cartItems.length === 0}
           fullWidth
+          onClick={handleCheckout}
         >
           Proceed to Checkout
         </Button>

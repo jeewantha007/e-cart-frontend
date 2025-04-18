@@ -7,11 +7,37 @@ import ProductCard from "../../components/ProductCard";
 import FilterPanel from "../../components/FilterPanel";
 import axios from 'axios';
 
+
 export default function Products() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState({});
   const [priceRange, setPriceRange] = useState([1000, 100000]);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cartItems");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  const handleAddToCart = (product) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find(item => item.id === product.id);
+      let updatedCart;
+      if (existingItem) {
+        updatedCart = prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        updatedCart = [...prevCart, { ...product, quantity: 1 }];
+      }
+  
+      // Save updated cart to localStorage
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -118,6 +144,7 @@ export default function Products() {
                 title={product.name}  // Use product.name for title
                 description={product.description}
                 price={product.price}
+                onAddToCart={() => handleAddToCart(product)}
               />
             ))
           ) : (
