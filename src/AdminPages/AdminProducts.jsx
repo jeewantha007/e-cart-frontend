@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Paper,
-  Grid,
-  Modal,
-} from '@mui/material';
+import { Box, Button, Modal, Typography, Grid, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import './adminProducts.css';
 import AdminProductCard from '../components/AdminProductCard';
 import SearchIcon from '@mui/icons-material/Search';
@@ -176,90 +168,99 @@ export default function AdminProducts() {
   return (
     <div className="ap-container">
       <div className="ap-top">
-        <Box>
-          <Button variant="contained" onClick={handleOpen}>
-            Add New Product
-          </Button>
+      <Box>
+      <Button variant="contained" onClick={handleOpen}>
+        Add New Product
+      </Button>
 
-          <Modal open={open} onClose={handleClose}>
-            <Box sx={style}>
-              <Typography variant="h6" gutterBottom>
-                {editMode ? 'Edit Product' : 'Add New Product'}
-              </Typography>
-              <form onSubmit={editMode ? handleUpdate : handleSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Product Name"
-                      name="name"
-                      value={product.name}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Price"
-                      name="price"
-                      type="number"
-                      value={product.price}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Description"
-                      name="description"
-                      multiline
-                      rows={4}
-                      value={product.description}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Category"
-                      name="category"
-                      value={product.category}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button variant="contained" component="label">
-                      Upload Image
-                      <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handleImageChange}
-                      />
-                    </Button>
-                    {product.image && (
-                      <Typography variant="body2" sx={{ mt: 1 }}>
-                        {product.image.name}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                    >
-                      {editMode ? 'Update Product' : 'Add Product'}
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </Box>
-          </Modal>
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={style}>
+          <Typography variant="h6" gutterBottom>
+            {editMode ? 'Edit Product' : 'Add New Product'}
+          </Typography>
+          <form onSubmit={editMode ? handleUpdate : handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Product Name"
+                  name="name"
+                  value={product.name}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Price"
+                  name="price"
+                  type="number"
+                  value={product.price}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  name="description"
+                  multiline
+                  rows={4}
+                  value={product.description}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth required>
+                  <InputLabel>Category</InputLabel>
+                  <Select
+                    name="category"
+                    value={product.category}
+                    onChange={handleChange}
+                    label="Category"
+                    sx={{ width: '200px' }}
+                  >
+                    <MenuItem value="Electronics">Electronics</MenuItem>
+                    <MenuItem value="Clothing">Clothing</MenuItem>
+                    <MenuItem value="Footwear">Footwear</MenuItem>
+                    <MenuItem value="Accessories">Accessories</MenuItem>
+                    <MenuItem value="Home & Kitchen">Home & Kitchen</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" component="label">
+                  Upload Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={handleImageChange}
+                  />
+                </Button>
+                {product.image && (
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    {product.image.name}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
+                  {editMode ? 'Update Product' : 'Add Product'}
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
         </Box>
+      </Modal>
+    </Box>
 
         <TextField
           id="outlined-basic"

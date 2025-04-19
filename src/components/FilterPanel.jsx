@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Accordion,
@@ -14,44 +14,36 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const FilterPanel = ({ onCategoryChange, onPriceRangeChange, onReset }) => {
-  const [categories, setCategories] = useState({
-    electronics: false,
-    clothing: false,
-    footwear: false,
-    accessories: false,
-    homeKitchen: false,
-  });
+const FilterPanel = ({ categories, priceRange, onCategoryChange, onPriceRangeChange, onReset }) => {
+  const [localCategories, setLocalCategories] = useState(categories);
+  const [localPriceRange, setLocalPriceRange] = useState(priceRange);
 
-  const [priceRange, setPriceRange] = useState([1000, 100000]);
+  // Update local state when props change
+  useEffect(() => {
+    setLocalCategories(categories);
+  }, [categories]);
+
+  useEffect(() => {
+    setLocalPriceRange(priceRange);
+  }, [priceRange]);
 
   const handleCategoryChange = (event) => {
+    const { name, checked } = event.target;
     const updatedCategories = {
-      ...categories,
-      [event.target.name]: event.target.checked,
+      ...localCategories,
+      [name]: checked,
     };
-    setCategories(updatedCategories);
+    setLocalCategories(updatedCategories);
     onCategoryChange(updatedCategories);
   };
 
-  const handleReset = () => {
-    const resetCategories = {
-      electronics: false,
-      clothing: false,
-      footwear: false,
-      accessories: false,
-      homeKitchen: false,
-    };
-    setCategories(resetCategories);
-    setPriceRange([1000, 100000]);
-    onCategoryChange(resetCategories);
-    onPriceRangeChange([1000, 100000]);
-    onReset();
+  const handleSliderChange = (event, newValue) => {
+    setLocalPriceRange(newValue);
+    onPriceRangeChange(newValue);
   };
 
-  const handleSliderChange = (event, newValue) => {
-    setPriceRange(newValue);
-    onPriceRangeChange(newValue);
+  const handleReset = () => {
+    onReset();
   };
 
   return (
@@ -65,16 +57,16 @@ const FilterPanel = ({ onCategoryChange, onPriceRangeChange, onReset }) => {
       }}
     >
       {/* Price Range Accordion */}
-      <Accordion disableGutters elevation={0}>
+      <Accordion defaultExpanded disableGutters elevation={0}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 0 }}>
           <Typography fontWeight={600}>Price Range</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="body2" sx={{ mb: 1 }}>
-            LKR{priceRange[0]} - LKR{priceRange[1]}
+            LKR{localPriceRange[0]} - LKR{localPriceRange[1]}
           </Typography>
           <Slider
-            value={priceRange}
+            value={localPriceRange}
             onChange={handleSliderChange}
             valueLabelDisplay="auto"
             min={1000}
@@ -87,30 +79,24 @@ const FilterPanel = ({ onCategoryChange, onPriceRangeChange, onReset }) => {
 
       <Divider sx={{ my: 1 }} />
 
-      {/* Categories Accordion */}
+      {/* Categories Accordion - Dynamic based on API data */}
       <Accordion defaultExpanded disableGutters elevation={0}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 0 }}>
           <Typography fontWeight={600}>Categories</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FormGroup>
-            {[
-              { name: 'electronics', label: 'Electronics' },
-              { name: 'clothing', label: 'Clothing' },
-              { name: 'footwear', label: 'Footwear' },
-              { name: 'accessories', label: 'Accessories' },
-              { name: 'homeKitchen', label: 'Home & Kitchen' },
-            ].map((item) => (
+            {Object.keys(localCategories).map((category) => (
               <FormControlLabel
-                key={item.name}
+                key={category}
                 control={
                   <Checkbox
-                    checked={categories[item.name]}
+                    checked={localCategories[category]}
                     onChange={handleCategoryChange}
-                    name={item.name}
+                    name={category}
                   />
                 }
-                label={item.label}
+                label={category.charAt(0).toUpperCase() + category.slice(1)}
               />
             ))}
           </FormGroup>

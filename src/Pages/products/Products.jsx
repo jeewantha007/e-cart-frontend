@@ -7,8 +7,8 @@ import ProductCard from "../../components/ProductCard";
 import FilterPanel from "../../components/FilterPanel";
 import axios from 'axios';
 
-
 export default function Products() {
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState({});
   const [priceRange, setPriceRange] = useState([1000, 100000]);
@@ -39,10 +39,12 @@ export default function Products() {
     });
   };
 
+  // Fetch products once on component mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/v1/products/getAll');
+        setProducts(response.data);
         setFilteredProducts(response.data);
         
         // Initialize categories based on unique product categories
@@ -62,7 +64,10 @@ export default function Products() {
     fetchProducts();
   }, []);
 
-  console.log(filteredProducts);
+  // Apply filters whenever filter criteria change
+  useEffect(() => {
+    applyFilters();
+  }, [searchTerm, categories, priceRange, products]);
 
   const handleCategoryChange = (updatedCategories) => {
     setCategories(updatedCategories);
@@ -77,28 +82,39 @@ export default function Products() {
   };
 
   const handleReset = () => {
-    setCategories({});
+    // Reset all filters and show all products
+    const resetCategories = {};
+    Object.keys(categories).forEach(cat => {
+      resetCategories[cat] = false;
+    });
+    setCategories(resetCategories);
     setPriceRange([1000, 100000]);
     setSearchTerm('');
+    setFilteredProducts(products);
   };
 
-  const filterProducts = () => {
-    return filteredProducts.filter((product) => {
-      // Check if no categories are selected (all false values)
-      const noCategorySelected = Object.values(categories).every((v) => v === false);
+  const applyFilters = () => {
+    const filtered = products.filter((product) => {
+      // Check if any category is selected
+      const selectedCategories = Object.entries(categories).filter(([_, isSelected]) => isSelected);
       
-      // Only check category match if at least one category is selected
-      const isCategorySelected = noCategorySelected || 
-        (product.category && categories[product.category] === true);
+      // If no categories are selected, don't filter by category
+      const categoryMatch = selectedCategories.length === 0 || 
+                           (product.category && categories[product.category] === true);
       
-      const isPriceInRange = product.price >= priceRange[0] && product.price <= priceRange[1];
-      const isTitleMatched = product.name && product.category.toLowerCase().includes(searchTerm);
+      // Price range check
+      const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
       
-      return isCategorySelected && isPriceInRange && isTitleMatched;
+      // Search term check - search in name and description
+      const searchMatch = !searchTerm || 
+                         (product.name && product.name.toLowerCase().includes(searchTerm)) || 
+                         (product.description && product.description.toLowerCase().includes(searchTerm));
+      
+      return categoryMatch && priceMatch && searchMatch;
     });
+    
+    setFilteredProducts(filtered);
   };
-
-  const productsToDisplay = filterProducts();
 
   return (
     <div className="pro-container">
@@ -128,6 +144,8 @@ export default function Products() {
       <div className="pro-content">
         <div className="pro-sidebar">
           <FilterPanel
+            categories={categories}
+            priceRange={priceRange}
             onCategoryChange={handleCategoryChange}
             onPriceRangeChange={handlePriceRangeChange}
             onReset={handleReset}
@@ -135,13 +153,13 @@ export default function Products() {
         </div>
 
         <div className="pro-middle">
-          {productsToDisplay.length > 0 ? (
-            productsToDisplay.map((product) => (
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 image={product.image || ''}
                 category={product.category}
-                title={product.name}  // Use product.name for title
+                title={product.name}
                 description={product.description}
                 price={product.price}
                 onAddToCart={() => handleAddToCart(product)}
