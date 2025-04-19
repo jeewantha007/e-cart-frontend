@@ -92,3 +92,25 @@ body {
     margin-bottom: 2rem;
   }
   
+  .contact-us-section {
+    margin-top: 4rem;
+    padding: 2rem;
+    background-color: #f5f5f5;
+    text-align: center;
+    border-radius: 10px;
+  }
+  
+  .contact-us-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .contact-details {
+    margin-bottom: 1rem;
+  }
+  
+  .contact-details p {
+    margin: 0.3rem 0;
+    font-size: 1.1rem;
+  }
+  
