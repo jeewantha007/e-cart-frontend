@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./components.css";
 import {
   Card,
@@ -9,9 +9,10 @@ import {
   Box,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 const ProductCard = ({
   image,
@@ -20,9 +21,42 @@ const ProductCard = ({
   description,
   price,
   onAddToCart,
+  handleDislike,
+  handleFavorite
 }) => {
   const formattedPrice =
     price && !isNaN(price) ? `LKR ${price.toLocaleString()}` : "LKR 0";
+
+  // Track product reaction state - can be "favorite", "dislike" or null
+  const [reaction, setReaction] = useState(null);
+
+  // Function to handle dislike button click
+  const onDislikeClick = () => {
+    // If already disliked, remove the dislike
+    if (reaction === "dislike") {
+      setReaction(null);
+      handleDislike(false); // Pass false to indicate removing dislike
+    } 
+    // If not disliked, set to dislike and remove any favorite
+    else {
+      setReaction("dislike");
+      handleDislike(true); // Pass true to indicate adding dislike
+    }
+  };
+
+  // Function to handle favorite button click
+  const onFavoriteClick = () => {
+    // If already favorited, remove the favorite
+    if (reaction === "favorite") {
+      setReaction(null);
+      handleFavorite(false); // Pass false to indicate removing from favorites
+    } 
+    // If not favorited, set to favorite and remove any dislike
+    else {
+      setReaction("favorite");
+      handleFavorite(true); // Pass true to indicate adding to favorites
+    }
+  };
 
   return (
     <Card
@@ -61,18 +95,30 @@ const ProductCard = ({
           </Typography>
         )}
 
-        <IconButton
-          sx={{ position: "absolute", top: 6, right: 6 }}
-          aria-label="add to favorites"
-        >
-          <ThumbDownOffAltIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          sx={{ position: "absolute", top: 6, right: 6, marginRight: "35px" }}
-          aria-label="add to favorites"
-        >
-          <FavoriteBorderIcon fontSize="small" />
-        </IconButton>
+        {/* Fixed positioning for consistent button placement */}
+        <Box sx={{ position: "absolute", top: 5, right: 8, display: "flex" }}>
+          <IconButton
+            aria-label="add to favorites"
+            onClick={onFavoriteClick}
+          >
+            {reaction === "favorite" ? (
+              <FavoriteIcon fontSize="small" color="primary" /> 
+            ) : (
+              <FavoriteBorderIcon fontSize="small" />
+            )}
+          </IconButton>
+
+          <IconButton
+            aria-label="dislike product"
+            onClick={onDislikeClick}
+          >
+            {reaction === "dislike" ? (
+              <ThumbDownIcon fontSize="small" color="error" />
+            ) : (
+              <ThumbDownOffAltIcon fontSize="small" />
+            )}
+          </IconButton>
+        </Box>
       </Box>
 
       {/* Card Content */}

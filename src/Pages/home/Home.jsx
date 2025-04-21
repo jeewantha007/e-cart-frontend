@@ -19,7 +19,7 @@ export default function Home() {
           <h1>E-Cart, Live Better</h1>
           <p>
             Discover the latest products at unbeatable prices. From electronics
-            to fashion, find everything you need at Shop Smart Academy Store
+            to fashion, find everything you need at Shop E-Cart Store
           </p>
 
           <Link to="products" style={{ textDecoration: "none" }}>

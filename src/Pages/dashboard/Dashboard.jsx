@@ -14,6 +14,11 @@ import Categories from '../Categories/Categories';
 import Cart from '../cart/Cart';
 import OrderHistory from '../OrderHistory/OrderHistory';
 import Footer from '../../components/Footer';
+import Clothing from '../Categories/Clothing';
+import Footwear from '../Categories/Footwear';
+import HomeKitchen from '../Categories/HomeKitchen';
+import Electronics from '../Categories/Electronics';
+import Accessories from '../Categories/Accessories';
 
 export default function Dashboard() {
   const [cartCount, setCartCount] = useState(0);
@@ -99,11 +104,16 @@ export default function Dashboard() {
           <Route path="products" element={<Products />} />
           <Route path="categories" element={<Categories />} />
           <Route path="orders" element={<OrderHistory />} />
+          <Route path="clothing" element={<Clothing />} />
+          <Route path="footwear" element={<Footwear />} />
+          <Route path="home-kitchen" element={<HomeKitchen />} />
+          <Route path="electronics" element={<Electronics />} />
+          <Route path="accessories" element={<Accessories />} />
           <Route path="cart" element={<Cart />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 }

@@ -31,31 +31,33 @@ export default function Users() {
   console.log(users);
   
   return (
-    <Box sx={{ padding: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ padding: 3 }}>
+      <Typography variant="h4" gutterBottom align="center">
         All Users
       </Typography>
 
       <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
         <Table aria-label="users table">
-          <TableHead>
-            <TableRow sx={{ backgroundColor: '#1e1e2f', color: 'white' }}>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem' , color: 'white' }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem' , color: 'white'}}>Email</TableCell>
+          <TableHead sx={{ backgroundColor: '#1e1e2f', color: 'white' }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'white' }}>#</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'white' }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'white' }}>Email</TableCell>
               <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'white' }}>Contact Number</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {users.length > 0 ? (
-              users.map((user) => (
-                <TableRow 
+              users.map((user, index) => (
+                <TableRow
                   key={user.id || user._id}
                   sx={{
                     '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' }, // striped rows
                     '&:hover': { backgroundColor: '#f1f1f1' }, // hover effect
                   }}
                 >
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.contact_no || 'N/A'}</TableCell>
@@ -63,7 +65,7 @@ export default function Users() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} align="center">
+                <TableCell colSpan={4} align="center">
                   No users found.
                 </TableCell>
               </TableRow>

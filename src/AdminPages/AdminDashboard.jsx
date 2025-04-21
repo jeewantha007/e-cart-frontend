@@ -28,6 +28,9 @@ import AdminProducts from './AdminProducts';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import AdminHome from './AdminHome';
 import Users from './Users';
+import AdminOrders from './AdminOrders';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import AdminPayments from './AdminPayments';
 
 const drawerWidth = 240;
 
@@ -105,10 +108,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const NavItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin-dashboard' },
   { text: 'Products', icon: <ShoppingCartIcon />, path: '/admin-dashboard/admin-products' },
-  { text: 'Orders', icon: <ListAltIcon />, path: '/admin-orders' },
+  { text: 'Orders', icon: <ListAltIcon />, path: '/admin-dashboard/admin-orders' },
+  { text: 'Payments', icon: <PaymentsIcon />, path: '/admin-dashboard/admin-Payments' },
   { text: 'Users', icon: <PeopleIcon />, path: '/admin-dashboard/admin-users' },
   { text: 'Reviews', icon: <RateReviewIcon />, path: '/admin-reviews' },
-  // { text: 'Settings', icon: <SettingsIcon />, path: '/admin-settings' },
+
 ];
 
 export default function AdminDashboard() {
@@ -147,7 +151,7 @@ export default function AdminDashboard() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            E-cart Admin
+            E-Cart Admin
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Button
@@ -196,7 +200,10 @@ export default function AdminDashboard() {
           <Routes>
             <Route index element={<AdminHome />} />
             <Route path="/admin-products" element={<AdminProducts />} />
+            <Route path="/admin-orders" element={<AdminOrders />} />
+            <Route path="/admin-Payments" element={<AdminPayments />} />
             <Route path="/admin-users" element={<Users />} />
+      
 
           </Routes>
         
