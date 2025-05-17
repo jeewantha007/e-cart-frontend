@@ -30,6 +30,7 @@ export default function AdminProducts() {
       price: '',
       description: '',
       category: '',
+      qty: '',  // Added qty field with empty initial value
       image: null,
     });
     setOpen(true);
@@ -42,6 +43,7 @@ export default function AdminProducts() {
     description: '',
     image: null,
     category: '',
+    qty: '',  // Added qty field with empty initial value
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -89,6 +91,7 @@ export default function AdminProducts() {
     formData.append('price', product.price);
     formData.append('description', product.description);
     formData.append('category', product.category);
+    formData.append('qty', product.qty); // Added qty field to form data
     formData.append('image', product.image);
 
     try {
@@ -115,6 +118,7 @@ export default function AdminProducts() {
       price: product.price,
       description: product.description,
       category: product.category,
+      qty: product.qty || '', // Include qty with fallback to empty string
       image: null,
     });
     setOpen(true);
@@ -128,6 +132,7 @@ export default function AdminProducts() {
     formData.append('price', product.price);
     formData.append('description', product.description);
     formData.append('category', product.category);
+    formData.append('qty', product.qty); // Added qty field to form data
     if (product.image) {
       formData.append('image', product.image);
     }
@@ -190,7 +195,7 @@ export default function AdminProducts() {
                   required
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Price"
@@ -199,6 +204,18 @@ export default function AdminProducts() {
                   value={product.price}
                   onChange={handleChange}
                   required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Stock Quantity"
+                  name="qty"
+                  type="number"
+                  value={product.qty}
+                  onChange={handleChange}
+                  required
+                  inputProps={{ min: 0 }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -220,7 +237,6 @@ export default function AdminProducts() {
                     value={product.category}
                     onChange={handleChange}
                     label="Category"
-                    sx={{ width: '200px' }}
                   >
                     <MenuItem value="Electronics">Electronics</MenuItem>
                     <MenuItem value="Clothing">Clothing</MenuItem>
@@ -299,10 +315,9 @@ export default function AdminProducts() {
             title={product.name}
             description={product.description}
             price={product.price}
+            qty={product.qty}  // Added qty to props passed to AdminProductCard
             onEdit={() => handleEditOpen(product)}
             onDelete={() => handleDelete(product.id)}
-
-            
           />
         ))}
       </div>

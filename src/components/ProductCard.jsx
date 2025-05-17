@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 import "./components.css";
 import {
   Card,
@@ -7,12 +7,14 @@ import {
   IconButton,
   Button,
   Box,
+  Chip,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import InventoryIcon from "@mui/icons-material/Inventory";
 
 const ProductCard = ({
   image,
@@ -20,43 +22,23 @@ const ProductCard = ({
   title,
   description,
   price,
+  qty,  // Added qty prop
   onAddToCart,
-  handleDislike,
-  handleFavorite
+ 
 }) => {
   const formattedPrice =
     price && !isNaN(price) ? `LKR ${price.toLocaleString()}` : "LKR 0";
 
-  // Track product reaction state - can be "favorite", "dislike" or null
-  const [reaction, setReaction] = useState(null);
 
-  // Function to handle dislike button click
-  const onDislikeClick = () => {
-    // If already disliked, remove the dislike
-    if (reaction === "dislike") {
-      setReaction(null);
-      handleDislike(false); // Pass false to indicate removing dislike
-    } 
-    // If not disliked, set to dislike and remove any favorite
-    else {
-      setReaction("dislike");
-      handleDislike(true); // Pass true to indicate adding dislike
-    }
+  // Determine stock status for visual indication
+  const getStockStatus = () => {
+    if (!qty || qty <= 0) return { label: "Out of Stock", color: "error" };
+    if (qty <= 5) return { label: "Low Stock", color: "warning" };
+    return { label: `In Stock: ${qty}`, color: "success" };
   };
 
-  // Function to handle favorite button click
-  const onFavoriteClick = () => {
-    // If already favorited, remove the favorite
-    if (reaction === "favorite") {
-      setReaction(null);
-      handleFavorite(false); // Pass false to indicate removing from favorites
-    } 
-    // If not favorited, set to favorite and remove any dislike
-    else {
-      setReaction("favorite");
-      handleFavorite(true); // Pass true to indicate adding to favorites
-    }
-  };
+  const stockStatus = getStockStatus();
+  const isOutOfStock = !qty || qty <= 0;
 
   return (
     <Card
@@ -95,30 +77,21 @@ const ProductCard = ({
           </Typography>
         )}
 
-        {/* Fixed positioning for consistent button placement */}
-        <Box sx={{ position: "absolute", top: 5, right: 8, display: "flex" }}>
-          <IconButton
-            aria-label="add to favorites"
-            onClick={onFavoriteClick}
-          >
-            {reaction === "favorite" ? (
-              <FavoriteIcon fontSize="small" color="primary" /> 
-            ) : (
-              <FavoriteBorderIcon fontSize="small" />
-            )}
-          </IconButton>
+        {/* Stock indicator in top left corner */}
+        <Chip
+          icon={<InventoryIcon fontSize="small" />}
+          label={stockStatus.label}
+          color={stockStatus.color}
+          size="small"
+          sx={{
+            position: "absolute",
+            top: 5,
+            left: 5,
+            fontSize: "0.7rem",
+          }}
+        />
 
-          <IconButton
-            aria-label="dislike product"
-            onClick={onDislikeClick}
-          >
-            {reaction === "dislike" ? (
-              <ThumbDownIcon fontSize="small" color="error" />
-            ) : (
-              <ThumbDownOffAltIcon fontSize="small" />
-            )}
-          </IconButton>
-        </Box>
+      
       </Box>
 
       {/* Card Content */}
@@ -176,8 +149,9 @@ const ProductCard = ({
             size="small"
             startIcon={<ShoppingCartCheckoutIcon fontSize="small" />}
             onClick={onAddToCart}
+            disabled={isOutOfStock}
           >
-            Add to Cart
+            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
           </Button>
         </Box>
       </CardContent>

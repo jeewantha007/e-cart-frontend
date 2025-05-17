@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, CardContent, Typography, IconButton, Button, Box } from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Card, CardContent, Typography, IconButton, Box, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 const AdminProductCard = ({
   image,
@@ -10,13 +10,21 @@ const AdminProductCard = ({
   title,
   description,
   price,
+  qty,
   onEdit,
   onDelete,
 }) => {
-
   const formattedPrice = price && !isNaN(price)
     ? `LKR ${price.toLocaleString()}`
     : 'LKR 0';
+
+  const getStockStatus = () => {
+    if (!qty || qty <= 0) return { label: "Out of Stock", color: "error" };
+    if (qty <= 5) return { label: "Low Stock", color: "warning" };
+    return { label: `In Stock: ${qty}`, color: "success" };
+  };
+
+  const stockStatus = getStockStatus();
 
   return (
     <Card
@@ -30,7 +38,7 @@ const AdminProductCard = ({
         flexDirection: 'column',
       }}
     >
-      {/* Image Placeholder */}
+      {/* Image */}
       <Box
         sx={{
           position: 'relative',
@@ -39,7 +47,6 @@ const AdminProductCard = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexShrink: 0,
         }}
       >
         {image ? (
@@ -49,10 +56,22 @@ const AdminProductCard = ({
             Product Image
           </Typography>
         )}
-        
+
+        <Chip
+          icon={<InventoryIcon fontSize="small" />}
+          label={stockStatus.label}
+          color={stockStatus.color}
+          size="small"
+          sx={{
+            position: "absolute",
+            top: 5,
+            left: 5,
+            fontSize: "0.7rem",
+          }}
+        />
       </Box>
 
-      {/* Card Content */}
+      {/* Content */}
       <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <Box>
           <Typography
@@ -72,10 +91,15 @@ const AdminProductCard = ({
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+        <Box sx={{ mt: 2 }}>
           <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: '1rem' }}>
             {formattedPrice}
           </Typography>
+
+          <Typography variant="caption" color="text.secondary">
+            Qty: {qty}
+          </Typography>
+
           <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
             <IconButton onClick={onEdit} color="primary">
               <EditIcon fontSize="small" />
