@@ -13,6 +13,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Footer from "../../components/Footer";
+import HomeImage from '../../assets/homeImage.jpeg';
 
 export default function Home() {
   // Initialize AOS
@@ -43,7 +44,7 @@ export default function Home() {
       <div className="home-top">
         <div className="home-topleft" data-aos="fade-right" data-aos-duration="1200">
           <img data-aos="fade-right"
-            src="https://3cslk-2024.sgp1.digitaloceanspaces.com/2024/06/64a5ee86-e-commerce.webp" 
+            src={HomeImage}
             alt="E-Cart Shopping" 
             className="homeImage floating" 
           />

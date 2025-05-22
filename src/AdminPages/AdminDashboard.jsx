@@ -31,6 +31,7 @@ import Users from './Users';
 import AdminOrders from './AdminOrders';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import AdminPayments from './AdminPayments';
+import AdminRating from './AdminRating';
 
 const drawerWidth = 240;
 
@@ -111,7 +112,7 @@ const NavItems = [
   { text: 'Orders', icon: <ListAltIcon />, path: '/admin-dashboard/admin-orders' },
   { text: 'Payments', icon: <PaymentsIcon />, path: '/admin-dashboard/admin-Payments' },
   { text: 'Users', icon: <PeopleIcon />, path: '/admin-dashboard/admin-users' },
-  { text: 'Reviews', icon: <RateReviewIcon />, path: '/admin-reviews' },
+  { text: 'Reviews', icon: <RateReviewIcon />, path: '/admin-dashboard/admin-ratings' },
 
 ];
 
@@ -203,6 +204,7 @@ export default function AdminDashboard() {
             <Route path="/admin-orders" element={<AdminOrders />} />
             <Route path="/admin-Payments" element={<AdminPayments />} />
             <Route path="/admin-users" element={<Users />} />
+            <Route path="/admin-ratings" element={<AdminRating />} />
       
 
           </Routes>

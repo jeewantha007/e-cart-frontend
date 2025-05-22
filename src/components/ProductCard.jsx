@@ -9,26 +9,45 @@ import {
   Chip,
   Dialog,
   DialogContent,
-  DialogTitle,
   DialogActions,
   IconButton
 } from "@mui/material";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CloseIcon from "@mui/icons-material/Close";
+import Rating from '@mui/material/Rating';
 
 const ProductCard = ({
+  productId,
+  userId,
   image,
   category,
   title,
   description,
   price,
   qty,
-  onAddToCart
+  onAddToCart,
+  averageRating = 0,
+  totalRatings = 0,
+  userRating = 0,
+  onRatingSubmit
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  
+  const [tempRating, setTempRating] = useState(userRating);
+
+  const handleRatingChange = (event, newValue) => {
+    if (newValue !== null) {
+      setTempRating(newValue);
+    }
+  };
+
+  const handleRatingSubmit = () => {
+    if (onRatingSubmit && tempRating > 0) {
+      onRatingSubmit(productId, tempRating);
+    }
+  };
+
   const handleExpandClick = (e) => {
     e.stopPropagation();
     setExpanded(!expanded);
@@ -36,10 +55,12 @@ const ProductCard = ({
   
   const handleOpenModal = () => {
     setOpenModal(true);
+    setTempRating(userRating); // Reset temp rating to user's current rating
   };
   
   const handleCloseModal = () => {
     setOpenModal(false);
+    setTempRating(userRating); // Reset temp rating when closing without submitting
   };
 
   const formattedPrice =
@@ -135,7 +156,7 @@ const ProductCard = ({
             flexDirection: "column",
             justifyContent: "space-between",
             p: 2,
-            pb: "16px !important", // Override MUI default
+            pb: "16px !important",
           }}
         >
           <Box>
@@ -177,7 +198,7 @@ const ProductCard = ({
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
-                  height: 32, // Fixed height for 2 lines
+                  height: 32,
                 }}
               >
                 {displayDescription}
@@ -211,6 +232,22 @@ const ProductCard = ({
             </Box>
           </Box>
 
+          {/* Display average rating (read-only) */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
+            <Rating
+              name="average-rating-display"
+              value={averageRating}
+              readOnly
+              precision={0.1}
+              sx={{
+                fontSize: 18
+              }}
+            />
+            <Typography variant="caption" color="text.secondary">
+              
+            </Typography>
+          </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -228,6 +265,7 @@ const ProductCard = ({
             >
               {formattedPrice}
             </Typography>
+
             <Button
               variant="outlined"
               size="small"
@@ -264,7 +302,6 @@ const ProductCard = ({
         }}
       >
         <Box sx={{ position: "relative" }}>
-          {/* Image at top of modal */}
           <Box
             sx={{
               height: 250,
@@ -293,7 +330,6 @@ const ProductCard = ({
               </Typography>
             )}
             
-            {/* Stock status in modal */}
             <Chip
               icon={<InventoryIcon fontSize="small" />}
               label={stockStatus.label}
@@ -306,7 +342,6 @@ const ProductCard = ({
               }}
             />
             
-            {/* Close button */}
             <IconButton
               onClick={handleCloseModal}
               sx={{
@@ -324,7 +359,6 @@ const ProductCard = ({
           </Box>
           
           <DialogContent sx={{ pt: 2, pb: 3 }}>
-            {/* Category */}
             <Typography
               variant="caption"
               color="text.secondary"
@@ -333,7 +367,6 @@ const ProductCard = ({
               {category}
             </Typography>
             
-            {/* Title */}
             <Typography
               variant="h6"
               component="h2"
@@ -343,12 +376,10 @@ const ProductCard = ({
               {title}
             </Typography>
             
-            {/* Full description */}
             <Typography variant="body2" paragraph>
               {description}
             </Typography>
             
-            {/* Price */}
             <Typography
               variant="h6"
               fontWeight="bold"
@@ -358,14 +389,62 @@ const ProductCard = ({
               {formattedPrice}
             </Typography>
             
-            {/* Stock info */}
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               {isOutOfStock ? "Currently out of stock" : `${qty} items available`}
             </Typography>
+
+            {/* Average Rating Display */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Customer Reviews
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                <Rating
+                  name="average-rating-modal"
+                  value={averageRating}
+                  readOnly
+                  precision={0.1}
+                  sx={{ fontSize: 20 }}
+                />
+                <Typography variant="body2" color="text.secondary">
+                  {averageRating.toFixed(1)} out of 5
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* User Rating Submission */}
+            {userId && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Rate this product
+                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Rating
+                    name="user-rating-submit"
+                    value={tempRating}
+                    onChange={handleRatingChange}
+                    sx={{ fontSize: 24 }}
+                  />
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={handleRatingSubmit}
+                    disabled={tempRating === 0 || tempRating === userRating}
+                    sx={{ textTransform: "none" }}
+                  >
+                    {userRating > 0 ? "Update Rating" : "Submit Rating"}
+                  </Button>
+                </Box>
+                {userRating > 0 && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
+                    Your current rating: {userRating} stars
+                  </Typography>
+                )}
+              </Box>
+            )}
           </DialogContent>
           
           <DialogActions sx={{ px: 3, pb: 2 }}>
-            {/* Add to cart button */}
             <Button
               variant="contained"
               startIcon={<ShoppingCartCheckoutIcon />}

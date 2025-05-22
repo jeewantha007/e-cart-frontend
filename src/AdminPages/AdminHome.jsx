@@ -220,7 +220,7 @@ export default function AdminHome() {
         <div className="card revenue">
           <h2>Total Revenue</h2>
           <p className="value">{formattedRevenue}</p>
-          <span>Total earnings this month</span>
+          <span>Total earnings</span>
         </div>
 
         <div className="card products">

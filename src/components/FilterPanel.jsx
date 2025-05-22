@@ -71,7 +71,7 @@ const FilterPanel = ({ categories, priceRange, onCategoryChange, onPriceRangeCha
             valueLabelDisplay="auto"
             min={0}
             max={1000000}
-            step={500}
+            step={1000}
             sx={{ color: '#1976d2' }}
           />
         </AccordionDetails>
