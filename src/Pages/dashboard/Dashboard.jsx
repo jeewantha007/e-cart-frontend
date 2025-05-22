@@ -74,8 +74,8 @@ export default function Dashboard() {
 
         <ul className="nav-links">
           <li><Link to="/dashboard">Home</Link></li>
+             <li><Link to="/dashboard/categories">Categories</Link></li>
           <li><Link to="/dashboard/products">Products</Link></li>
-          <li><Link to="/dashboard/categories">Categories</Link></li>
           <li><Link to="/dashboard/orders">Order History</Link></li>
           <li>
             <Link to="/dashboard/cart">
@@ -114,6 +114,7 @@ export default function Dashboard() {
         </Routes>
       </main>
       {/* <Footer/> */}
+   
     </div>
   );
 }

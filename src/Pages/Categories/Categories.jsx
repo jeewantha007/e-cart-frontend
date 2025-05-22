@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./categories.css";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const categories = [
   {
@@ -36,8 +38,29 @@ export default function Categories() {
   const handleNavigate = (link) => {
     navigate(link);
   };
+
+
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+      mirror: true,
+    });
+    
+    // Update AOS on window resize
+    window.addEventListener('resize', () => {
+      AOS.refresh();
+    });
+    
+    return () => {
+      window.removeEventListener('resize', () => {
+        AOS.refresh();
+      });
+    };
+  }, []);
   return (
-    <div className="cat-container">
+    <div className="cat-container" data-aos="fade-up">
       {categories.map((category, index) => (
         <div
           key={index}

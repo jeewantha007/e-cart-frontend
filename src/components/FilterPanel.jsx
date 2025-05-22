@@ -69,8 +69,8 @@ const FilterPanel = ({ categories, priceRange, onCategoryChange, onPriceRangeCha
             value={localPriceRange}
             onChange={handleSliderChange}
             valueLabelDisplay="auto"
-            min={1000}
-            max={100000}
+            min={0}
+            max={1000000}
             step={500}
             sx={{ color: '#1976d2' }}
           />

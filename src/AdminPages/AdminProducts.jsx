@@ -315,7 +315,7 @@ export default function AdminProducts() {
             title={product.name}
             description={product.description}
             price={product.price}
-            qty={product.qty}  // Added qty to props passed to AdminProductCard
+            qty={product.qty}  
             onEdit={() => handleEditOpen(product)}
             onDelete={() => handleDelete(product.id)}
           />

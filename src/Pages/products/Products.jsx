@@ -11,7 +11,7 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState({});
-  const [priceRange, setPriceRange] = useState([1000, 100000]);
+  const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [searchTerm, setSearchTerm] = useState('');
   
   const [cart, setCart] = useState(() => {
@@ -86,7 +86,7 @@ export default function Products() {
       resetCategories[cat] = false;
     });
     setCategories(resetCategories);
-    setPriceRange([1000, 100000]);
+    setPriceRange([0, 1000000]);
     setSearchTerm('');
     setFilteredProducts(products);
   };
